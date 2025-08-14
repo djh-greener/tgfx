@@ -40,6 +40,9 @@ class TGFXBaseView {
  private:
   std::string canvasID = "";
   std::shared_ptr<tgfx::Window> window = nullptr;
+  tgfx::DisplayList displayList = {};
+  int lastIndex = -1;
+  tgfx::Surface* lastSurface = nullptr;
 };
 
 }  // namespace hello2d

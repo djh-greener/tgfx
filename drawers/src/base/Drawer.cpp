@@ -78,18 +78,22 @@ void Drawer::DrawBackground(tgfx::Canvas* canvas, const AppHost* host) {
 Drawer::Drawer(std::string name) : _name(std::move(name)) {
 }
 
-void Drawer::build(const AppHost* host) {
+void Drawer::build(const AppHost* host, tgfx::DisplayList& displayList) {
   if (host == nullptr) {
     tgfx::PrintError("Drawer::draw() appHost is nullptr!");
     return;
   }
+  displayList.root()->removeChildren();
   if (!_root) {
     _root = buildLayerTree(host);
-    displayList.root()->addChild(_root);
     displayList.setRenderMode(tgfx::RenderMode::Tiled);
     displayList.setAllowZoomBlur(true);
     displayList.setMaxTileCount(512);
   }
+  displayList.root()->addChild(_root);
+}
+
+void Drawer::updateRootMatrix(const AppHost* host) {
   auto bounds = _root->getBounds(nullptr, true);
   auto totalScale = std::min(static_cast<float>(host->width()) / (padding * 2 + bounds.width()),
                              static_cast<float>(host->height()) / (padding * 2 + bounds.height()));

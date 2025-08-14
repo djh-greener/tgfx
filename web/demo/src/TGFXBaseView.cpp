@@ -67,17 +67,26 @@ bool TGFXBaseView::draw(int drawIndex, float zoom, float offsetX, float offsetY)
     device->unlock();
     return true;
   }
+  auto drawer = drawers::Drawer::GetByIndex(drawIndex % drawers::Drawer::Count());
+  displayList.setZoomScale(zoom);
+  displayList.setContentOffset(offsetX, offsetY);
+  if (drawIndex != lastIndex) {
+    drawer->build(appHost.get(),displayList);
+  }
+  if (lastIndex!=-1 && !displayList.hasContentChanged() && surface.get()==lastSurface) {
+    device->unlock();
+    return true;
+  }
   auto canvas = surface->getCanvas();
   canvas->clear();
   drawers::Drawer::DrawBackground(canvas, appHost.get());
-  auto drawer = drawers::Drawer::GetByIndex(drawIndex % drawers::Drawer::Count());
-  drawer->displayList.setZoomScale(zoom);
-  drawer->displayList.setContentOffset(offsetX, offsetY);
-  drawer->build(appHost.get());
-  drawer->displayList.render(canvas->getSurface(), false);
+  drawer->updateRootMatrix(appHost.get());
+  displayList.render(canvas->getSurface(), false);
   context->flushAndSubmit();
   window->present(context);
   device->unlock();
+  lastIndex = drawIndex;
+  lastSurface = surface.get();
   return true;
 }
 }  // namespace hello2d

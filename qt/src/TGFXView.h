@@ -22,6 +22,7 @@
 #include <QQuickItem>
 #include "drawers/AppHost.h"
 #include "tgfx/gpu/opengl/qt/QGLWindow.h"
+#include "tgfx/layers/DisplayList.h"
 
 namespace hello2d {
 class TGFXView : public QQuickItem {
@@ -41,6 +42,9 @@ class TGFXView : public QQuickItem {
   std::shared_ptr<drawers::AppHost> appHost = nullptr;
   float zoom = 1.0f;
   QPointF offset = {0, 0};
+  tgfx::DisplayList displayList = {};
+  int lastIndex = -1;
+  tgfx::Surface* lastSurface = nullptr;
 
   void createAppHost();
   void draw();

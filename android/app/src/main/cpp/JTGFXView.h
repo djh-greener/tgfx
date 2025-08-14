@@ -24,6 +24,7 @@
 #include "drawers/Drawer.h"
 #include "tgfx/gpu/Window.h"
 #include "tgfx/gpu/opengl/egl/EGLWindow.h"
+#include "tgfx/layers/DisplayList.h"
 
 namespace hello2d {
 class JTGFXView {
@@ -41,6 +42,9 @@ class JTGFXView {
   void updateSize();
 
   void draw(int index, float zoom, float x, float y);
+  tgfx::DisplayList displayList = {};
+  int lastIndex = -1;
+  tgfx::Surface* lastSurface = nullptr;
 
  private:
   ANativeWindow* nativeWindow = nullptr;

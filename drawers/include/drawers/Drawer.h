@@ -58,10 +58,8 @@ class Drawer {
   /**
    * Build the contents.
    */
-  void build(const AppHost* host);
-
-  tgfx::DisplayList displayList = {};
-
+  void build(const AppHost* host, tgfx::DisplayList& displayList);
+  void updateRootMatrix(const AppHost* host);
  protected:
   float padding = 30.f;
   std::shared_ptr<tgfx::Layer> _root = nullptr;
